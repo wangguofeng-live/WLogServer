@@ -5,7 +5,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE_FOLDER = os.path.join(BASE_DIR,'templates')
 STATIC_FOLDER = os.path.join(BASE_DIR,'static')
 
-LOG_FOLDER = os.path.join(BASE_DIR,'LOG')
+UPLOADS_FOLDER = os.path.join(BASE_DIR, 'uploads')
 
 def get_db_rul(dbinfo):
 
@@ -34,6 +34,8 @@ class Config:
     SECRET_KEY = 'asdfaqer323423fdf3=='
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+    UPLOAD_PATH = UPLOADS_FOLDER
 
 
 class DevelopConfig(Config):
