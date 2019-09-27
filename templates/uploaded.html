@@ -1,14 +1,19 @@
 {% extends 'bootstrap/base.html' %}
-{% from 'macros.html' import form_field %}
+{#{% from 'macros.html' import form_field %}#}
 
-{% block title %}Home{% endblock %}
+{% block title %}File Uploaded{% endblock %}
 
 {% block content %}
+
 {% if session.filenames %}
 {% for filename in session.filenames %}
-<a href="{{ url_for('get_file', filename=filename) }}" target="_blank">
-    <img src="{{ url_for('get_file', filename=filename) }}">
-</a>
+    <ul>
+        <li>{{ filename }}</li>
+    </ul>
+
+{#<a href="{{ url_for('get_file', filename=filename) }}" target="_blank">#}
+{#    <img src="{{ url_for('get_file', filename=filename) }}">#}
+{#</a>#}
 {% endfor %}
 {% endif %}
 {% endblock %}

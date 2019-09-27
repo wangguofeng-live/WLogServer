@@ -1,9 +1,11 @@
 import uuid
 
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, flash, session, redirect, url_for, abort
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired, FileAllowed
 from wtforms import SubmitField
+
+from App.settings import get_upload_folder, get_filename_suffix, get_filename_list, get_file_path
 
 blue = Blueprint('first_blue', __name__)
 
@@ -20,32 +22,42 @@ def index():
 from flask import send_from_directory
 
 class UploadForm(FlaskForm):
-    photo = FileField('Upload Image', validators=[FileRequired(), FileAllowed(['jpg','jpeg','png','gif'])])
+    file = FileField('Upload File', validators=[FileRequired(), FileAllowed(['jpg', 'jpeg', 'png', 'gif', 'txt', 'log'])])
     submit = SubmitField()
 
 
 def random_filename(filename):
-    ext = os.path.splitext(filename)[1]
-    new_filename = uuid.uuid4().hex + ext
+    new_filename = uuid.uuid4().hex + get_filename_suffix(filename)
     return new_filename
 
-@blue.route('/uploaded-images')
-def show_images():
-    return render_template('uploaded.html')
+@blue.route('/file_manager')
+def file_manager():
+    return render_template('file_manager.html',file_names = get_filename_list())
 
-@blue.route('/uploads/<path:filename>')
-def get_file(filename):
-    return send_from_directory(app.config['UPLOAD_PATH'], filename)
+@blue.route('/file/<filename>/', methods=['GET', 'POST'])
+def get_image(filename):
+    return send_from_directory(get_upload_folder(), filename)
+
+# @blue.route('/uploads/<path:filename>')
+# def get_file(filename):
+#     return send_from_directory(app.config['UPLOAD_PATH'], filename)
 
 
 @blue.route('/upload', methods=['GET', 'POST'])
 def upload():
+
     form = UploadForm()
-    if form.validate_on_submit():
-        f = form.photo.data
-        filename =random_filename(f.filename)
-        f.save(os.path.join(app.config['UPLOAD_PATH'], filename))
-        flash('Upload success.')
-        session['filenames'] = [filename]
-        return redirect(url_for('show_images'))
-    return render_template('upload.html', form = form)
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            print('保存文件')
+            f = form.file.data
+            filename = random_filename(f.filename)
+            f.save(get_file_path(filename))
+            flash('Upload success.')
+            session['filenames'] = [filename]
+        else:
+            flash('Upload fail.')
+
+    return render_template('upload.html', form=form)
+
+

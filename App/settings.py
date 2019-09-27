@@ -7,6 +7,18 @@ STATIC_FOLDER = os.path.join(BASE_DIR,'static')
 
 UPLOADS_FOLDER = os.path.join(BASE_DIR, 'uploads')
 
+def get_upload_folder():
+    return UPLOADS_FOLDER
+
+def get_file_path(filename):
+    return os.path.join(UPLOADS_FOLDER, filename)
+
+def get_filename_suffix(filename):
+    return os.path.splitext(filename)[1]
+
+def get_filename_list():
+    return os.listdir(UPLOADS_FOLDER)
+
 def get_db_rul(dbinfo):
 
     ENGINE = dbinfo.get('ENGINE') or 'mysql'
