@@ -14,7 +14,7 @@ def init_blue(app):
 
 @blue.route('/')
 def index():
-    return 'Hello'
+    return 'Hello Man'
 
 
 
@@ -32,7 +32,7 @@ def random_filename(filename):
 
 @blue.route('/file_manager')
 def file_manager():
-    return render_template('file_manager.html',file_names = get_filename_list())
+    return render_template('file_manager.html', file_names = get_filename_list())
 
 @blue.route('/file/<filename>/', methods=['GET', 'POST'])
 def get_image(filename):
@@ -49,7 +49,7 @@ def upload():
     form = UploadForm()
     if request.method == 'POST':
         if form.validate_on_submit():
-            print('保存文件')
+            print('Save File ...')
             f = form.file.data
             filename = random_filename(f.filename)
             f.save(get_file_path(filename))
